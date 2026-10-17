@@ -1,0 +1,38 @@
+name: sure_saffat
+description: "سوره صافات - متن عربی، ترجمه فارسی و صوت تلاوت"
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.6.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+  shared_preferences: ^2.3.2
+  audioplayers: ^6.1.0
+  path_provider: ^2.1.4
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+  flutter_launcher_icons: ^0.14.1
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/saffat.json
+    - assets/audio/shahriyarPARHIZGAR.mp3
+  fonts:
+    - family: "نسخ عثمانی"
+      fonts:
+        - asset: assets/fonts/ScheherazadeNew-Regular.ttf
+    - family: "نسخ قرآنی"
+      fonts:
+        - asset: assets/fonts/AmiriQuran.ttf
+
+flutter_launcher_icons:
+  android: true
+  ios: false
+  image_path: "assets/logo_icon.png"
