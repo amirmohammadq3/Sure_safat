@@ -10,6 +10,7 @@ import '../data/saffat_repository.dart';
 import '../services/audio_service.dart';
 import '../widgets/appearance_sheet.dart';
 import '../widgets/dashed_divider.dart';
+import '../widgets/now_playing_bar.dart';
 import '../widgets/reciters_sheet.dart';
 import 'about_sheet.dart';
 
@@ -96,16 +97,18 @@ class _QuranScreenState extends State<QuranScreen> with AppStateListenerMixin {
 
   Widget _ayahBlock(AppPalette p, Ayah a) {
     final arabicWithMark = '${a.arabic} ${ayahEndMark(a.number)}';
+    // یک کادر واحد برای هر آیه: متن عربی + خط‌چین + ترجمه، همه داخل همین کادر
+    // تا معلوم باشد این ترجمه دقیقاً مال همین آیه است و با آیه‌ی دیگری قاطی نشود.
     return Padding(
-      padding: const EdgeInsets.only(bottom: 4),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-            decoration: BoxDecoration(color: p.arabicCardBg, borderRadius: BorderRadius.circular(16)),
-            child: Text(
+      padding: const EdgeInsets.only(bottom: 14),
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        decoration: BoxDecoration(color: p.arabicCardBg, borderRadius: BorderRadius.circular(16)),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text(
               arabicWithMark,
               textAlign: TextAlign.justify,
               textDirection: TextDirection.rtl,
@@ -116,19 +119,42 @@ class _QuranScreenState extends State<QuranScreen> with AppStateListenerMixin {
                 height: 1.9,
               ),
             ),
-          ),
-          DashedDivider(p: p),
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            decoration: BoxDecoration(color: p.translationCardBg, borderRadius: BorderRadius.circular(16)),
-            child: Text(
-              a.persian,
-              textAlign: TextAlign.right,
-              style: TextStyle(color: p.textSecondary, fontSize: appState.persianFontSize, height: 1.9),
+            DashedDivider(p: p),
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+              decoration: BoxDecoration(color: p.translationCardBg, borderRadius: BorderRadius.circular(12)),
+              child: Text(
+                a.persian,
+                textAlign: TextAlign.right,
+                style: TextStyle(color: p.textSecondary, fontSize: appState.persianFontSize, height: 1.9),
+              ),
             ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// بعد از آخرین آیه‌ی سوره (آیه ۱۸۲) نمایش داده می‌شود
+  Widget _closingBlock(AppPalette p) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 6, bottom: 10),
+      child: Column(
+        children: [
+          Text(
+            'صَدَقَ ٱللَّهُ ٱلْعَلِيُّ ٱلْعَظِيمُ',
+            textAlign: TextAlign.center,
+            textDirection: TextDirection.rtl,
+            style: TextStyle(color: p.gold, fontFamily: appState.fontFamily, fontWeight: FontWeight.bold, fontSize: appState.arabicFontSize + 2),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 14),
+          Text(
+            'منبع متن عربی و ترجمه‌ی فارسی: دانشنامه‌ی قرآن کریم (QuranEnc.com)، ترجمه‌ی فارسی تهیه‌شده زیر نظر مرکز رواد الترجمة. '
+            'متن بدون هیچ تغییری بازنشر شده و طبق شرایط بازنشر این سایت، نام ناشر و منبع در اینجا ذکر می‌شود.',
+            textAlign: TextAlign.center,
+            style: TextStyle(color: p.textFaint, fontSize: 10.5, height: 1.8),
+          ),
         ],
       ),
     );
@@ -136,6 +162,7 @@ class _QuranScreenState extends State<QuranScreen> with AppStateListenerMixin {
 
   Widget _pageView(AppPalette p, int pageIndex) {
     final ayahs = _pages[pageIndex];
+    final isLastPage = pageIndex == _pages.length - 1;
     return ListView(
       padding: const EdgeInsets.fromLTRB(14, 10, 14, 14),
       children: [
@@ -151,6 +178,7 @@ class _QuranScreenState extends State<QuranScreen> with AppStateListenerMixin {
           ),
         ],
         for (final a in ayahs) _ayahBlock(p, a),
+        if (isLastPage) _closingBlock(p),
       ],
     );
   }
@@ -256,6 +284,7 @@ class _QuranScreenState extends State<QuranScreen> with AppStateListenerMixin {
                 itemBuilder: (context, i) => _pageView(p, i),
               ),
             ),
+            if (_audio.activeReciter != null) NowPlayingBar(p: p, audio: _audio),
           ],
         ),
       ),
