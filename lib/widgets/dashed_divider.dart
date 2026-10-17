@@ -24,7 +24,8 @@ class DashedDivider extends StatelessWidget {
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: Icon(Icons.star, size: 11, color: p.gold),
+            // نماد فارسی (☫ U+262B) دقیقاً مثل خط‌چین صفحه‌ی دعای عهد
+            child: Text('\u262B', style: TextStyle(fontSize: 15, color: p.gold, height: 1)),
           ),
           Expanded(
             child: LayoutBuilder(builder: (context, c) {
