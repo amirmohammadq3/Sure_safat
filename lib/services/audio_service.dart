@@ -161,7 +161,17 @@ class AudioController extends ChangeNotifier {
   }
 
   Future<void> seek(Duration to) async {
-    await _player.seek(to);
+    var clamped = to;
+    if (clamped < Duration.zero) clamped = Duration.zero;
+    if (duration > Duration.zero && clamped > duration) clamped = duration;
+    await _player.seek(clamped);
+    position = clamped;
+    notifyListeners();
+  }
+
+  /// عقب/جلو رفتن نسبت به موقعیت فعلی (برای دکمه‌های ۱۰ ثانیه)
+  Future<void> seekBy(Duration delta) async {
+    await seek(position + delta);
   }
 
   @override
