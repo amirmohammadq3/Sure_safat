@@ -159,6 +159,29 @@ class _QuranScreenState extends State<QuranScreen> with AppStateListenerMixin {
     );
   }
 
+  /// راهنمای کوچک و کم‌رنگ در گوشه‌ی پایین هر ورق (به‌جز ورق آخر)
+  Widget _nextPageHint(AppPalette p) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 4),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Divider(color: p.divider),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Padding(
+              padding: const EdgeInsets.only(top: 2),
+              child: Text(
+                'برای رفتن به صفحه‌ی بعد، صفحه را از چپ به راست بکشید',
+                style: TextStyle(color: p.textFaint, fontSize: 10),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _pageView(AppPalette p, int pageIndex) {
     final ayahs = _pages[pageIndex];
     final isLastPage = pageIndex == _pages.length - 1;
@@ -178,6 +201,7 @@ class _QuranScreenState extends State<QuranScreen> with AppStateListenerMixin {
         ],
         for (final a in ayahs) _ayahBlock(p, a),
         if (isLastPage) _closingBlock(p),
+        if (pageIndex == 0) _nextPageHint(p),
       ],
     );
   }
