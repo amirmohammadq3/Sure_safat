@@ -150,8 +150,7 @@ class _QuranScreenState extends State<QuranScreen> with AppStateListenerMixin {
           ),
           const SizedBox(height: 14),
           Text(
-            'منبع متن عربی و ترجمه‌ی فارسی: دانشنامه‌ی قرآن کریم (QuranEnc.com)، ترجمه‌ی فارسی تهیه‌شده زیر نظر مرکز رواد الترجمة. '
-            'متن بدون هیچ تغییری بازنشر شده و طبق شرایط بازنشر این سایت، نام ناشر و منبع در اینجا ذکر می‌شود.',
+            'منبع متن عربی و ترجمه‌ی فارسی: سایت آیت‌الله العظمی مکارم شیرازی (ترجمه‌ی قرآن، برگرفته از تفسیر نمونه).',
             textAlign: TextAlign.center,
             style: TextStyle(color: p.textFaint, fontSize: 10.5, height: 1.8),
           ),
