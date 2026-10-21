@@ -13,7 +13,7 @@ class AppState extends ChangeNotifier {
   bool isDarkMode = false;
   double arabicFontSize = 28;
   double persianFontSize = 16;
-  String fontFamily = kFontOsmani;
+  String fontFamily = kFontQurani;
   int selectedReciter = 0; // 0=شهریار پرهیزگار (همراه برنامه), 1=منشاوی, 2=عبدالباسط
   bool _loaded = false;
   bool get loaded => _loaded;
@@ -23,7 +23,7 @@ class AppState extends ChangeNotifier {
     isDarkMode = prefs.getBool('is_dark') ?? false;
     arabicFontSize = prefs.getDouble('arabic_size') ?? 28;
     persianFontSize = prefs.getDouble('persian_size') ?? 16;
-    fontFamily = prefs.getString('font_family') ?? kFontOsmani;
+    fontFamily = prefs.getString('font_family') ?? kFontQurani;
     selectedReciter = prefs.getInt('selected_reciter') ?? 0;
     _loaded = true;
     notifyListeners();
