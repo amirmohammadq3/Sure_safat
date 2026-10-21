@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:audioplayers/audioplayers.dart';
 import '../common/palette.dart';
 import '../services/audio_service.dart';
 
@@ -14,41 +13,86 @@ class NowPlayingBar extends StatelessWidget {
     return '$m:$s';
   }
 
+  Widget _seekButton(IconData icon, String label, VoidCallback onTap) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: 48,
+            height: 48,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: p.translationCardBg,
+              border: Border.all(color: p.gold.withOpacity(0.5)),
+            ),
+            alignment: Alignment.center,
+            child: Icon(icon, color: p.gold, size: 24),
+          ),
+          const SizedBox(height: 4),
+          Text(label, style: TextStyle(color: p.textFaint, fontSize: 10)),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final idx = audio.activeReciter;
     if (idx == null) return const SizedBox.shrink();
     final info = kReciters[idx];
-    final isPlaying = audio.playerState == PlayerState.playing;
     final total = audio.duration.inMilliseconds > 0 ? audio.duration : const Duration(seconds: 1);
     final pos = audio.position.inMilliseconds.clamp(0, total.inMilliseconds).toDouble();
 
     return Container(
-      padding: const EdgeInsets.fromLTRB(14, 10, 14, 4),
+      margin: const EdgeInsets.fromLTRB(10, 0, 10, 8),
+      padding: const EdgeInsets.fromLTRB(18, 14, 18, 10),
       decoration: BoxDecoration(
         color: p.arabicCardBg,
-        border: Border(top: BorderSide(color: p.divider), bottom: BorderSide(color: p.divider)),
+        borderRadius: BorderRadius.circular(22),
+        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.12), blurRadius: 16, offset: const Offset(0, -4))],
+        border: Border.all(color: p.divider),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           Row(
             children: [
-              Icon(Icons.graphic_eq, color: p.gold, size: 16),
-              const SizedBox(width: 6),
+              Container(
+                width: 34,
+                height: 34,
+                decoration: BoxDecoration(shape: BoxShape.circle, color: p.gold.withOpacity(0.15)),
+                alignment: Alignment.center,
+                child: Icon(Icons.graphic_eq, color: p.gold, size: 17),
+              ),
+              const SizedBox(width: 10),
               Expanded(
-                child: Text('در حال پخش: ${info.name}', style: TextStyle(color: p.textPrimary, fontWeight: FontWeight.bold, fontSize: 12.5)),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('در حال پخش', style: TextStyle(color: p.textFaint, fontSize: 10)),
+                    Text(info.name, style: TextStyle(color: p.textPrimary, fontWeight: FontWeight.bold, fontSize: 14)),
+                  ],
+                ),
               ),
               GestureDetector(
                 onTap: audio.stop,
-                child: Icon(Icons.close, color: p.textFaint, size: 18),
+                child: Container(
+                  width: 30,
+                  height: 30,
+                  decoration: BoxDecoration(shape: BoxShape.circle, color: p.translationCardBg),
+                  alignment: Alignment.center,
+                  child: Icon(Icons.close, color: p.textFaint, size: 16),
+                ),
               ),
             ],
           ),
+          const SizedBox(height: 2),
           SliderTheme(
             data: SliderTheme.of(context).copyWith(
-              trackHeight: 3,
-              thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 6),
+              trackHeight: 3.5,
+              thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 7),
               overlayShape: const RoundSliderOverlayShape(overlayRadius: 14),
             ),
             child: Slider(
@@ -61,7 +105,7 @@ class NowPlayingBar extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(bottom: 4),
+            padding: const EdgeInsets.only(bottom: 10),
             child: Directionality(
               textDirection: TextDirection.ltr,
               child: Row(
@@ -76,28 +120,9 @@ class NowPlayingBar extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              IconButton(
-                onPressed: () => audio.seekBy(const Duration(seconds: -10)),
-                icon: Icon(Icons.replay_10, color: p.textSecondary, size: 26),
-                tooltip: '۱۰ ثانیه عقب',
-              ),
-              const SizedBox(width: 10),
-              GestureDetector(
-                onTap: () => audio.playReciter(idx),
-                child: Container(
-                  width: 50,
-                  height: 50,
-                  decoration: BoxDecoration(shape: BoxShape.circle, color: p.gold),
-                  alignment: Alignment.center,
-                  child: Icon(isPlaying ? Icons.pause : Icons.play_arrow, color: Colors.white, size: 26),
-                ),
-              ),
-              const SizedBox(width: 10),
-              IconButton(
-                onPressed: () => audio.seekBy(const Duration(seconds: 10)),
-                icon: Icon(Icons.forward_10, color: p.textSecondary, size: 26),
-                tooltip: '۱۰ ثانیه جلو',
-              ),
+              _seekButton(Icons.replay_10, '۱۰ ثانیه عقب', () => audio.seekBy(const Duration(seconds: -10))),
+              const SizedBox(width: 36),
+              _seekButton(Icons.forward_10, '۱۰ ثانیه جلو', () => audio.seekBy(const Duration(seconds: 10))),
             ],
           ),
         ],
