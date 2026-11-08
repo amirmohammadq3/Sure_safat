@@ -45,6 +45,13 @@ android {
         }
     }
 
+    // کتابخانه‌های native داخل APK فشرده بمانند تا حجم فایل APK کمتر شود
+    packaging {
+        jniLibs {
+            useLegacyPackaging = true
+        }
+    }
+
     buildTypes {
         release {
             signingConfig = keystorePropertiesFile.exists() ? signingConfigs.release : signingConfigs.debug
