@@ -91,8 +91,8 @@ class RecitersSheet extends StatelessWidget {
               child: Stack(
                 alignment: Alignment.center,
                 children: [
-                  CircularProgressIndicator(value: progress, strokeWidth: 3, color: p.gold, backgroundColor: p.divider),
-                  Text('${(progress * 100).round()}', style: TextStyle(color: p.textSecondary, fontSize: 8)),
+                  CircularProgressIndicator(value: progress < 0 ? null : progress, strokeWidth: 3, color: p.gold, backgroundColor: p.divider),
+                  if (progress >= 0) Text('${(progress * 100).round()}', style: TextStyle(color: p.textSecondary, fontSize: 8)),
                 ],
               ),
             )
