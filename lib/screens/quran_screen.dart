@@ -214,7 +214,8 @@ class _QuranScreenState extends State<QuranScreen> with AppStateListenerMixin {
     return Container(
       decoration: BoxDecoration(
         color: p.headerBg,
-        border: Border(top: BorderSide(color: p.divider)),
+        // وقتی نوار پخش بالای این نوار است، خط جداکننده را خود نوار پخش می‌کشد
+        border: _audio.activeReciter != null ? null : Border(top: BorderSide(color: p.divider)),
       ),
       child: SafeArea(
         top: false,
@@ -307,11 +308,16 @@ class _QuranScreenState extends State<QuranScreen> with AppStateListenerMixin {
                 itemBuilder: (context, i) => _pageView(p, i),
               ),
             ),
-            if (_audio.activeReciter != null) NowPlayingBar(p: p, audio: _audio),
           ],
         ),
       ),
-      bottomNavigationBar: _bottomToolbar(p),
+      bottomNavigationBar: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          NowPlayingBar(p: p, audio: _audio),
+          _bottomToolbar(p),
+        ],
+      ),
     );
   }
 }
